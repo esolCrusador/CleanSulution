@@ -3,6 +3,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
+using System.IO;
+using System.Linq;
+using EnvDTE;
+using EnvDTE100;
 using Microsoft.Win32;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -102,6 +106,59 @@ namespace GloryS.SolutionCleanup_VSIX
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
+            var solution = GetSolution();
+            var projectOutputs = solution.Projects.Cast<Project>()
+                .Where(proj => proj.ConfigurationManager != null && proj.ConfigurationManager.ActiveConfiguration != null)
+                .Select(proj =>
+                {
+                    string projDir = Path.GetDirectoryName(proj.FileName);
+
+                    var propertiesList = proj.ConfigurationManager.ActiveConfiguration.Properties.Cast<Property>().ToList();
+
+                    var output = (string) propertiesList.Find(p => p.Name == "OutputPath").Value;
+                    var obj = propertiesList.Find(p => p.Name == "IntermediatePath");
+                    string objPath = null;
+                    if (obj != null)
+                    {
+                        objPath = (string) obj.Value;
+                    }
+
+                    return new { Otuput = Path.Combine(projDir, output), Obj = objPath == null ? null : Path.Combine(projDir, objPath) };
+                });
+
+            foreach (var projectOutput in projectOutputs)
+            {
+                var allFiles = Directory.EnumerateFiles(projectOutput.Otuput, "*", SearchOption.AllDirectories)
+                    .Concat(projectOutput.Obj == null ? Enumerable.Empty<string>() : Directory.EnumerateFiles(projectOutput.Obj, "*", SearchOption.AllDirectories));
+
+                foreach (var file in allFiles)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                var allDirs = Directory.EnumerateDirectories(projectOutput.Otuput, "*", SearchOption.AllDirectories)
+                    .Concat(projectOutput.Obj==null? Enumerable.Empty<string>(): Directory.EnumerateDirectories(projectOutput.Obj, "*", SearchOption.AllDirectories));
+
+                foreach (var dir in allDirs)
+                {
+                    try
+                    {
+                        Directory.Delete(dir);
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                
+            }
             // Show a Message Box to prove we were here
             IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
             Guid clsid = Guid.Empty;
@@ -120,5 +177,24 @@ namespace GloryS.SolutionCleanup_VSIX
                        out result));
         }
 
+        private Solution4 GetSolution()
+        {
+            var dte = GetService<DTE, SDTE>();
+            Solution4 dteSolution = null;
+
+            if (dte != null)
+            {
+                dteSolution = (Solution4)dte.Solution;
+            }
+
+            return dteSolution;
+        }
+
+        private TInterface GetService<TInterface, TService>()
+            where TInterface : class
+            where TService : class
+        {
+            return GetService(typeof(TService)) as TInterface;
+        }
     }
 }

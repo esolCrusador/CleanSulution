@@ -42,11 +42,14 @@
     <Groups>
 
       <Group guid="guidSolutionCleanup_VSIXCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_SOLNNODE"/>
+      </Group>
+      <Group guid="guidSolutionCleanup_VSIXCmdSet" id="MyMenuGroup1" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
-      
-
-
+      <Group guid="guidSolutionCleanup_VSIXCmdSet" id="MyMenuGroup2" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_BUILD"/>
+      </Group>      
     </Groups>
     
     <!--Buttons section. -->
@@ -69,6 +72,29 @@
         </Strings>
       </Button>
 
+      <Button guid="guidSolutionCleanup_VSIXCmdSet" id="CleanupSolution" priority="0x0100" type="Button">
+        <Parent guid="guidSolutionCleanup_VSIXCmdSet" id="MyMenuGroup1" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Cleanup</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidSolutionCleanup_VSIXCmdSet" id="CleanupSolution" priority="0x0100" type="Button">
+        <Parent guid="guidSolutionCleanup_VSIXCmdSet" id="MyMenuGroup2" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Cleanup</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidSolutionCleanup_VSIXCmdSet" id="CleanupSolution" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_BUILD_SOLUTION" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Cleanup</ButtonText>
+        </Strings>
+      </Button>
 
       <Button guid="guidSolutionCleanup_VSIXCmdSet" id="cmdidMyTool" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
@@ -106,6 +132,8 @@
     <GuidSymbol name="guidSolutionCleanup_VSIXCmdSet" value="{487d5e56-b6a0-43c7-bc16-54593800f3fa}">
 
       <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="MyMenuGroup1" value="0x1030" />
+      <IDSymbol name="MyMenuGroup2" value="0x1040" />
       <IDSymbol name="CleanupSolution" value="0x0100" />
       <IDSymbol name="cmdidMyTool" value="0x0101" />
     </GuidSymbol>
