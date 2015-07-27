@@ -1,0 +1,38 @@
+# Common
+
+# Resharper Folders
+_ReSharper*
+
+# Debug Folders
+bin
+obj
+debug
+release
+bin-debug
+bin-release
+deploy
+
+# User's Files
+*.user
+*.suo
+*.ncb
+*.opt
+
+# C++
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Log files
+*.plg
